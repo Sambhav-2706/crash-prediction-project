@@ -84,6 +84,26 @@ def main():
     assert X_train.shape[0] == y_train.shape[0], "Mismatch in X_train and y_train rows"
 
     # ============ 5. APPLY SMOTE TO BALANCE CLASSES ============
+    # Clean indices
+    X_train = X_train.reset_index(drop=True)
+    y_train = y_train.reset_index(drop=True)
+
+    # Clean types, fill NAs, and force all numeric
+    for col in X_train.columns:
+        if X_train[col].dtype == 'object' or str(X_train[col].dtype).startswith('category'):
+            le = LabelEncoder()
+            X_train[col] = le.fit_transform(X_train[col].astype(str))
+
+    X_train = X_train.fillna(-999)
+    y_train = y_train.fillna(-999)
+
+    # Final type check and assertion
+    assert X_train.select_dtypes(include=['object', 'category', 'string']).empty, "Non-numeric X columns"
+    assert not X_train.isnull().values.any(), "NaNs in X_train"
+    assert not y_train.isnull().values.any(), "NaNs in y_train"
+    assert X_train.shape[0] == y_train.shape[0], "Mismatched train sizes"
+
+    # Now apply SMOTE
     smote = SMOTE(random_state=42)
     X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
 
