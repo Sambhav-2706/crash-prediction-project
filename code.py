@@ -57,6 +57,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # ========== 4. BALANCE THE CLASSES (SMOTE) ==========
+# After all encoding and imputing
+X_train = X_train.reset_index(drop=True)
+y_train = y_train.reset_index(drop=True)
+
+assert X_train.select_dtypes(include=['object']).empty, "Non-numeric cols remain"
+assert not X_train.isnull().values.any(), "NaNs in X_train"
+assert not y_train.isnull().values.any(), "NaNs in y_train"
+assert X_train.shape[0] == y_train.shape[0], "X_train/y_train size mismatch"
+
+from imblearn.over_sampling import SMOTE
 smote = SMOTE(random_state=42)
 X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
 
