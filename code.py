@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
 # Correct path formatting for Windows. Use an 'r' before the string, or double backslashes, or forward slashes.
-df = pd.read_csv(r"C:\Users\sumit\OneDrive\Documents\AviationData.csv", encoding='latin1')
+df = pd.read_csv(AviationData.csv)
 print(df.head())
 print(df.info())
 print(df['Aircraft.damage'].value_counts())
